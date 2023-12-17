@@ -1,0 +1,1 @@
+ALTER TABLE "quiz" ADD COLUMN "createdat" timestamp DEFAULT now();

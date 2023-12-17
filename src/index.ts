@@ -1,27 +1,35 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import * as userControl from './controllers/UserController';
+import { Express } from 'express';
+import serverStart from './libs/server';
+import { userStart } from './control/users/routes';
+import { quizStart } from './control/quiz/route';
 
-const app = express();
-app.use(express.json());
-const port = 8000;
 
-mongoose
-  .connect(
-    'mongodb+srv://xvii1103:T4Ptjpge6zcRdbax@train.h5aiaqn.mongodb.net/quizapp?retryWrites=true&w=majority',
-  )
-  .then(() => {
-    console.log('mongodb works');
-  })
-  .catch(() => {
-    console.log('catch');
+async function main() {
+  const app = await serverStart();
+  mainget(app);
+  userStart(app);
+  quizStart(app);
+}
+
+function mainget(app: Express) {
+  app.get('/', (req, res) => {
+    res.json('ich bin pidor');
   });
+}
 
-app.post('/', (req, res) => {
-  res.send('ich bin pidor');
-});
-app.post('/register', userControl.register);
+main();
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.post('/register', userValidations.registerValidation, userControl.register); //Регистрация
+// app.post('/login', userValidations.loginValidation, userControl.login); //Логин
+// app.get('/getme', checkAuth, userControl.getMe); //Получение юзера по JWT token
+
+// app.get('/quiz', checkAuth, quizControllers.getAllQuiz); //Получение всех quiz у юзера по JWT token
+// app.post('/quiz', quizValidations.quizCreateValidator, checkAuth, quizControllers.createQuiz); // Создание quiz по JWT token /без questions
+// app.patch('/quiz', quizValidations.quizUpdateValidator, checkAuth, quizControllers.updateQuiz); //Обновдение quiz & questions
+
+// app.get('/quiz/:id', checkAuth, quizControllers.getQuizById); //Получение полный quiz с questions по query params и JWT token
+// app.get('/quiz/view/:id', AnswerControllers.viewCountAdd);
+
+// app.delete('/quiz/:id', userControl.register);
+
+// app.post('/test', checkAuth, TestControllers.updateQuiz); //Тестовой эндпойнт
